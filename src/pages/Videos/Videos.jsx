@@ -27,7 +27,7 @@ function Videos() {
             {/* Page Header */}
             <div className="page-header">
                 <div className="container">
-                    <h1 className="page-title">Video Courses</h1>
+                    <h1 className="hero-title">Video Courses</h1>
                     <p className="page-description">
                         Learn from experienced teachers with our high-quality video content
                     </p>

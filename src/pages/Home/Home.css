@@ -74,6 +74,7 @@
     line-height: 1.2;
     margin-bottom: var(--space-6);
     animation: fadeInUp 0.6s ease 0.1s both;
+    color: #ffffff;
 }
 
 @media (min-width: 768px) {
@@ -90,7 +91,7 @@
 
 .hero-highlight {
     display: block;
-    background: linear-gradient(90deg, #60a5fa, #34d399);
+    background: linear-gradient(90deg, #48c9b0, #f1c40f);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;

@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom';
 import {
-    BookOpen,
     Mail,
     Phone,
     MapPin,
@@ -9,6 +8,7 @@ import {
     Instagram,
     Youtube
 } from 'lucide-react';
+import logo from '../../assets/logo.jpeg';
 import './Footer.css';
 
 function Footer() {
@@ -36,12 +36,10 @@ function Footer() {
                 {/* Brand Section */}
                 <div className="footer-brand">
                     <Link to="/" className="footer-logo">
-                        <div className="footer-logo-icon">
-                            <BookOpen size={24} />
-                        </div>
-                        <span className="footer-logo-text">Genii</span>
+                        <img src={logo} alt="Genii Books" className="footer-logo-image" />
+                        <span className="footer-logo-text">Genii Books</span>
                     </Link>
-                    <p className="footer-tagline">
+                    <p className="footer-description">
                         Empowering students with quality education materials for academic excellence.
                     </p>
                     <div className="footer-social">

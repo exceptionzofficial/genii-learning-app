@@ -14,6 +14,7 @@ import Videos from './pages/Videos/Videos';
 import Pricing from './pages/Pricing/Pricing';
 import HardCopy from './pages/HardCopy/HardCopy';
 import MyDownloads from './pages/MyDownloads/MyDownloads';
+import Profile from './pages/Profile/Profile';
 
 // Styles
 import './App.css';
@@ -31,22 +32,58 @@ function ModalManager() {
 
   if (modalType === 'pdfPreview' && modalContent) {
     return (
-      <Modal title={`Preview: ${modalContent.title}`} size="large">
+      <Modal title="PDF Preview" size="large">
         <div className="pdf-preview-modal">
-          <div className="preview-info">
-            <p>This is a preview of the first 5 pages</p>
-            <p className="preview-subject">{modalContent.subject} • {modalContent.chapters} Chapters</p>
-          </div>
-          <div className="preview-pages">
-            {[1, 2, 3, 4, 5].map((page) => (
-              <div key={page} className="preview-page">
-                <img src={modalContent.thumbnail} alt={`Page ${page}`} />
-                <span className="page-number">Page {page}</span>
+          {/* PDF Header Info */}
+          <div className="preview-header">
+            <div className="preview-book-info">
+              <img src={modalContent.thumbnail} alt={modalContent.title} className="preview-cover" />
+              <div className="preview-details">
+                <span className="preview-badge">{modalContent.subject}</span>
+                <h3>{modalContent.title}</h3>
+                <p>{modalContent.description}</p>
+                <div className="preview-meta">
+                  <span>{modalContent.chapters} Chapters</span>
+                  <span>{modalContent.pages} Pages</span>
+                </div>
               </div>
-            ))}
+            </div>
           </div>
+
+          {/* Preview Notice */}
+          <div className="preview-notice">
+            <span className="notice-icon">📖</span>
+            <span>Previewing first 5 pages of {modalContent.pages} total pages</span>
+          </div>
+
+          {/* PDF Pages Preview */}
+          <div className="preview-pages-container">
+            <div className="preview-pages">
+              {[1, 2, 3, 4, 5].map((page) => (
+                <div key={page} className="preview-page">
+                  <div className="page-content">
+                    <img src={modalContent.thumbnail} alt={`Page ${page}`} />
+                    <div className="page-overlay">
+                      <span className="zoom-hint">Click to zoom</span>
+                    </div>
+                  </div>
+                  <span className="page-number">Page {page}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Preview Footer with CTA */}
           <div className="preview-footer">
-            <p>Like what you see? Purchase to access all {modalContent.pages} pages</p>
+            <div className="footer-content">
+              <div className="footer-text">
+                <h4>Like what you see?</h4>
+                <p>Get full access to all {modalContent.pages} pages with detailed explanations</p>
+              </div>
+              <button className="btn btn-primary btn-lg preview-buy-btn">
+                Buy Now - Access Full PDF
+              </button>
+            </div>
           </div>
         </div>
       </Modal>
@@ -93,6 +130,7 @@ function AppContent() {
           <Route path="/pricing" element={<Pricing />} />
           <Route path="/hard-copy" element={<HardCopy />} />
           <Route path="/my-downloads" element={<MyDownloads />} />
+          <Route path="/profile" element={<Profile />} />
         </Routes>
       </main>
       <Footer />

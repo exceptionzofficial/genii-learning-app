@@ -84,7 +84,7 @@ function HardCopy() {
             <div className="hardcopy-page">
                 <div className="page-header">
                     <div className="container">
-                        <h1 className="page-title">Order Hard Copy</h1>
+                        <h1 className="hero-title">Order Hard Copy</h1>
                     </div>
                 </div>
                 <div className="container">
@@ -107,7 +107,7 @@ function HardCopy() {
             {/* Page Header */}
             <div className="page-header">
                 <div className="container">
-                    <h1 className="page-title">Order Hard Copy</h1>
+                    <h1 className="hero-title">Order Hard Copy</h1>
                     <p className="page-description">
                         Get printed materials delivered to your doorstep
                     </p>

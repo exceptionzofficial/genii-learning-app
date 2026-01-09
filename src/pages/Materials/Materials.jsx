@@ -28,7 +28,7 @@ function Materials() {
             {/* Page Header */}
             <div className="page-header">
                 <div className="container">
-                    <h1 className="page-title">Study Materials</h1>
+                    <h1 className="hero-title">Study Materials</h1>
                     <p className="page-description">
                         Browse our collection of comprehensive PDFs. Preview the first 5 pages before purchase.
                     </p>

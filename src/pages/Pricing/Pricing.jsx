@@ -45,7 +45,7 @@ function Pricing() {
             {/* Page Header */}
             <div className="page-header">
                 <div className="container">
-                    <h1 className="page-title">Pricing Plans</h1>
+                    <h1 className="hero-title">Pricing Plans</h1>
                     <p className="page-description">
                         One-time purchase. Lifetime access. No hidden fees.
                     </p>
