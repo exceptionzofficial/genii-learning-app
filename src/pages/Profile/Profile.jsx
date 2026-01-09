@@ -106,7 +106,7 @@ function Profile() {
             <div className="profile-page">
                 <div className="page-header">
                     <div className="container">
-                        <h1 className="page-title">My Profile</h1>
+                        <h1 className="hero-title">My Profile</h1>
                     </div>
                 </div>
                 <div className="container">
@@ -130,7 +130,7 @@ function Profile() {
             {/* Page Header */}
             <div className="page-header">
                 <div className="container">
-                    <h1 className="page-title">My Profile</h1>
+                    <h1 className="hero-title">My Profile</h1>
                     <p className="page-description">
                         Manage your account information and track orders
                     </p>

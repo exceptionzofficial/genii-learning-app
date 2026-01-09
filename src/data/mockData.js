@@ -2,32 +2,38 @@
 // All prices are placeholders - actual prices will be fetched from Admin Panel
 
 export const CLASSES = [
-    { id: '10th', name: 'Class 10', description: 'Board Exam Preparation' },
-    { id: '11th', name: 'Class 11', description: 'Foundation Building' },
-    { id: '12th', name: 'Class 12', description: 'Board + Entrance Ready' },
+    { id: 'class10', name: 'Class 10', description: 'Board Exam Preparation' },
+    { id: 'class11', name: 'Class 11', description: 'Foundation Building' },
+    { id: 'class12', name: 'Class 12', description: 'Board + Entrance Ready' },
     { id: 'neet', name: 'NEET', description: 'Medical Entrance' }
 ];
 
+// Board Types for Class 10, 11, 12 (Not for NEET)
+export const BOARD_TYPES = [
+    { id: 'state', name: 'State Board', description: 'Tamil Nadu State Board syllabus' },
+    { id: 'cbse', name: 'CBSE', description: 'Central Board of Secondary Education' }
+];
+
 export const SUBJECTS = {
-    '10th': ['Mathematics', 'Science', 'Social Science', 'English', 'Hindi'],
-    '11th': ['Physics', 'Chemistry', 'Biology', 'Mathematics', 'English'],
-    '12th': ['Physics', 'Chemistry', 'Biology', 'Mathematics', 'English'],
+    'class10': ['Mathematics', 'Science', 'Social Science', 'English', 'Hindi'],
+    'class11': ['Physics', 'Chemistry', 'Biology', 'Mathematics', 'English'],
+    'class12': ['Physics', 'Chemistry', 'Biology', 'Mathematics', 'English'],
     'neet': ['Physics', 'Chemistry', 'Biology', 'Zoology', 'Botany']
 };
 
 // Placeholder pricing - actual prices set by admin
 export const PRICING = {
-    '10th': {
+    'class10': {
         pdfs: { price: 1500, originalPrice: 2000, name: 'All PDFs Package' },
         videos: { price: 2000, originalPrice: 2500, name: 'All Videos Package' },
         bundle: { price: 3000, originalPrice: 4000, name: 'Complete Bundle' }
     },
-    '11th': {
+    'class11': {
         pdfs: { price: 1800, originalPrice: 2500, name: 'All PDFs Package' },
         videos: { price: 2500, originalPrice: 3200, name: 'All Videos Package' },
         bundle: { price: 4000, originalPrice: 5200, name: 'Complete Bundle' }
     },
-    '12th': {
+    'class12': {
         pdfs: { price: 2000, originalPrice: 2800, name: 'All PDFs Package' },
         videos: { price: 3000, originalPrice: 3800, name: 'All Videos Package' },
         bundle: { price: 4500, originalPrice: 6000, name: 'Complete Bundle' }
@@ -41,15 +47,15 @@ export const PRICING = {
 
 // Hard Copy Pricing (placeholder)
 export const HARD_COPY_PRICING = {
-    '10th': { price: 2500, shipping: 100 },
-    '11th': { price: 3000, shipping: 100 },
-    '12th': { price: 3500, shipping: 100 },
+    'class10': { price: 2500, shipping: 100 },
+    'class11': { price: 3000, shipping: 100 },
+    'class12': { price: 3500, shipping: 100 },
     'neet': { price: 4000, shipping: 100 }
 };
 
 // Sample PDF Materials
 export const PDF_MATERIALS = {
-    '10th': [
+    'class10': [
         {
             id: 'pdf-10-1',
             title: 'Mathematics - Complete Guide',
@@ -101,7 +107,7 @@ export const PDF_MATERIALS = {
             description: 'Complete English guide with grammar rules, literature analysis, and writing skills.'
         }
     ],
-    '11th': [
+    'class11': [
         {
             id: 'pdf-11-1',
             title: 'Physics - Mechanics & Waves',
@@ -143,7 +149,7 @@ export const PDF_MATERIALS = {
             description: 'Advanced mathematics covering sets, functions, trigonometry, and coordinate geometry.'
         }
     ],
-    '12th': [
+    'class12': [
         {
             id: 'pdf-12-1',
             title: 'Physics - Electromagnetism & Modern Physics',
@@ -231,7 +237,7 @@ export const PDF_MATERIALS = {
 
 // Sample Video Courses
 export const VIDEO_COURSES = {
-    '10th': [
+    'class10': [
         {
             id: 'vid-10-1',
             title: 'Mathematics Masterclass',
@@ -263,7 +269,7 @@ export const VIDEO_COURSES = {
             description: 'History, Geography, and Civics with maps and timelines.'
         }
     ],
-    '11th': [
+    'class11': [
         {
             id: 'vid-11-1',
             title: 'Physics Foundation',
@@ -295,7 +301,7 @@ export const VIDEO_COURSES = {
             description: 'Cell biology and life processes explained visually.'
         }
     ],
-    '12th': [
+    'class12': [
         {
             id: 'vid-12-1',
             title: 'Physics Advanced',

@@ -8,7 +8,7 @@ export function AppProvider({ children }) {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
 
     // Selected class
-    const [selectedClass, setSelectedClass] = useState('10th');
+    const [selectedClass, setSelectedClass] = useState('class10');
 
     // Modal states
     const [isModalOpen, setIsModalOpen] = useState(false);
