@@ -1,27 +1,70 @@
-import { useState, useMemo } from 'react';
-import { Search, Filter, Grid, List } from 'lucide-react';
+import { useState, useEffect, useMemo } from 'react';
+import { Search, Filter, Grid, List, Loader2, AlertCircle } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import PDFCard from '../../components/PDFCard/PDFCard';
-import { PDF_MATERIALS, SUBJECTS, CLASSES } from '../../data/mockData';
+import { contentAPI } from '../../services/api';
+import { SUBJECTS, CLASSES } from '../../data/mockData';
 import './Materials.css';
 
 function Materials() {
-    const { selectedClass, setSelectedClass } = useApp();
+    const { selectedClass, setSelectedClass, selectedBoard } = useApp();
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedSubject, setSelectedSubject] = useState('all');
     const [viewMode, setViewMode] = useState('grid');
+    const [materials, setMaterials] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-    const materials = PDF_MATERIALS[selectedClass] || [];
+    // Fetch materials from API
+    useEffect(() => {
+        const fetchMaterials = async () => {
+            try {
+                setLoading(true);
+                setError(null);
+
+                const response = await contentAPI.getPDFs(selectedClass, selectedBoard);
+
+                if (response.success) {
+                    setMaterials(response.data);
+                } else {
+                    setError(response.message || 'Failed to fetch materials');
+                }
+            } catch (err) {
+                console.error('Error fetching materials:', err);
+                setError('Failed to load materials. Please try again.');
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchMaterials();
+    }, [selectedClass, selectedBoard]);
+
     const subjects = SUBJECTS[selectedClass] || [];
 
     const filteredMaterials = useMemo(() => {
         return materials.filter(pdf => {
             const matchesSearch = pdf.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                pdf.description.toLowerCase().includes(searchQuery.toLowerCase());
+                (pdf.description || '').toLowerCase().includes(searchQuery.toLowerCase());
             const matchesSubject = selectedSubject === 'all' || pdf.subject === selectedSubject;
             return matchesSearch && matchesSubject;
         });
     }, [materials, searchQuery, selectedSubject]);
+
+    // Transform API data to match PDFCard expected format
+    const transformedMaterials = filteredMaterials.map(pdf => ({
+        id: pdf._id,
+        title: pdf.title,
+        description: pdf.description || `${pdf.chapters || 0} chapters, ${pdf.pages || 0} pages`,
+        subject: pdf.subject,
+        thumbnail: pdf.thumbnailUrl || '/images/pdf-thumbnail.png',
+        chapters: pdf.chapters || 0,
+        pages: pdf.pages || 0,
+        previewPages: pdf.previewPages || 5,
+        fileUrl: pdf.fileUrl,
+        classId: pdf.classId,
+        board: pdf.board
+    }));
 
     return (
         <div className="materials-page">
@@ -105,13 +148,24 @@ function Materials() {
 
                 {/* Results Info */}
                 <div className="results-info">
-                    <span>Showing {filteredMaterials.length} materials for {CLASSES.find(c => c.id === selectedClass)?.name}</span>
+                    <span>Showing {transformedMaterials.length} materials for {CLASSES.find(c => c.id === selectedClass)?.name}</span>
                 </div>
 
-                {/* Materials Grid */}
-                {filteredMaterials.length > 0 ? (
+                {/* Loading State */}
+                {loading ? (
+                    <div className="loading-state">
+                        <Loader2 size={40} className="spin" />
+                        <p>Loading materials...</p>
+                    </div>
+                ) : error ? (
+                    <div className="error-state">
+                        <AlertCircle size={40} />
+                        <p>{error}</p>
+                        <button onClick={() => window.location.reload()}>Try Again</button>
+                    </div>
+                ) : transformedMaterials.length > 0 ? (
                     <div className={`materials-grid ${viewMode === 'list' ? 'materials-list' : ''}`}>
-                        {filteredMaterials.map((pdf) => (
+                        {transformedMaterials.map((pdf) => (
                             <PDFCard key={pdf.id} pdf={pdf} />
                         ))}
                     </div>
@@ -121,6 +175,43 @@ function Materials() {
                     </div>
                 )}
             </div>
+
+            <style>{`
+                .loading-state, .error-state {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    padding: 60px 20px;
+                    text-align: center;
+                    color: var(--text-secondary);
+                }
+
+                .loading-state .spin {
+                    animation: spin 1s linear infinite;
+                    color: var(--primary-500);
+                }
+
+                @keyframes spin {
+                    from { transform: rotate(0deg); }
+                    to { transform: rotate(360deg); }
+                }
+
+                .error-state {
+                    color: #e74c3c;
+                }
+
+                .error-state button {
+                    margin-top: 16px;
+                    padding: 10px 24px;
+                    background: var(--primary-500);
+                    color: white;
+                    border: none;
+                    border-radius: 8px;
+                    font-weight: 600;
+                    cursor: pointer;
+                }
+            `}</style>
         </div>
     );
 }

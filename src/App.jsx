@@ -6,6 +6,7 @@ import Header from './components/Header/Header';
 import Footer from './components/Footer/Footer';
 import Modal from './components/Modal/Modal';
 import RegistrationForm from './components/RegistrationForm/RegistrationForm';
+import PDFPreviewModal from './components/PDFPreviewModal/PDFPreviewModal';
 
 // Pages
 import Home from './pages/Home/Home';
@@ -20,7 +21,7 @@ import Profile from './pages/Profile/Profile';
 import './App.css';
 
 function ModalManager() {
-  const { modalType, modalContent } = useApp();
+  const { modalType, modalContent, closeModal, openRegistrationModal } = useApp();
 
   if (modalType === 'registration') {
     return (
@@ -31,62 +32,22 @@ function ModalManager() {
   }
 
   if (modalType === 'pdfPreview' && modalContent) {
+    const handleBuy = () => {
+      closeModal();
+      openRegistrationModal({
+        id: modalContent.id,
+        name: modalContent.title,
+        type: 'single-pdf',
+        price: 199,
+      });
+    };
+
     return (
-      <Modal title="PDF Preview" size="large">
-        <div className="pdf-preview-modal">
-          {/* PDF Header Info */}
-          <div className="preview-header">
-            <div className="preview-book-info">
-              <img src={modalContent.thumbnail} alt={modalContent.title} className="preview-cover" />
-              <div className="preview-details">
-                <span className="preview-badge">{modalContent.subject}</span>
-                <h3>{modalContent.title}</h3>
-                <p>{modalContent.description}</p>
-                <div className="preview-meta">
-                  <span>{modalContent.chapters} Chapters</span>
-                  <span>{modalContent.pages} Pages</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Preview Notice */}
-          <div className="preview-notice">
-            <span className="notice-icon">📖</span>
-            <span>Previewing first 5 pages of {modalContent.pages} total pages</span>
-          </div>
-
-          {/* PDF Pages Preview */}
-          <div className="preview-pages-container">
-            <div className="preview-pages">
-              {[1, 2, 3, 4, 5].map((page) => (
-                <div key={page} className="preview-page">
-                  <div className="page-content">
-                    <img src={modalContent.thumbnail} alt={`Page ${page}`} />
-                    <div className="page-overlay">
-                      <span className="zoom-hint">Click to zoom</span>
-                    </div>
-                  </div>
-                  <span className="page-number">Page {page}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Preview Footer with CTA */}
-          <div className="preview-footer">
-            <div className="footer-content">
-              <div className="footer-text">
-                <h4>Like what you see?</h4>
-                <p>Get full access to all {modalContent.pages} pages with detailed explanations</p>
-              </div>
-              <button className="btn btn-primary btn-lg preview-buy-btn">
-                Buy Now - Access Full PDF
-              </button>
-            </div>
-          </div>
-        </div>
-      </Modal>
+      <PDFPreviewModal
+        pdf={modalContent}
+        onClose={closeModal}
+        onBuy={handleBuy}
+      />
     );
   }
 
@@ -94,16 +55,29 @@ function ModalManager() {
     return (
       <Modal title={modalContent.title} size="large">
         <div className="video-preview-modal">
-          <div className="video-player-placeholder">
-            <img src={modalContent.thumbnail} alt={modalContent.title} />
-            <div className="video-overlay-info">
-              <p>Video Preview</p>
-              <span>{modalContent.duration}</span>
-            </div>
+          <div className="video-player-container">
+            {modalContent.fileUrl ? (
+              <video
+                controls
+                className="video-player"
+                poster={modalContent.thumbnail}
+              >
+                <source src={modalContent.fileUrl} type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+            ) : (
+              <div className="video-player-placeholder">
+                <img src={modalContent.thumbnail} alt={modalContent.title} />
+                <div className="video-overlay-info">
+                  <p>Video Preview</p>
+                  <span>{modalContent.duration}</span>
+                </div>
+              </div>
+            )}
           </div>
           <div className="video-info">
             <h3>{modalContent.title}</h3>
-            <p className="video-instructor">Instructor: {modalContent.instructor}</p>
+            <p className="video-instructor">Instructor: {modalContent.instructor || 'Genii Books'}</p>
             <p className="video-description">{modalContent.description}</p>
             <div className="video-stats">
               <span>{modalContent.lessons} Lessons</span>

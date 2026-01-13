@@ -108,7 +108,7 @@ function Profile() {
                     <div className="container">
                         <h1 className="hero-title">My Profile</h1>
                     </div>
-                </div>
+                </div>  
                 <div className="container">
                     <div className="not-logged-in">
                         <div className="empty-icon">
