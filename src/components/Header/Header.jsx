@@ -27,7 +27,7 @@ function Header() {
         isAuthenticated,
         user,
         logout,
-        openRegistrationModal
+        openLoginModal
     } = useApp();
 
     const navigate = useNavigate();
@@ -52,7 +52,7 @@ function Header() {
         if (isAuthenticated) {
             navigate('/profile');
         } else {
-            openRegistrationModal();
+            openLoginModal();
         }
         closeMobileMenu();
     };

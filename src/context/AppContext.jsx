@@ -1,4 +1,5 @@
-import { createContext, useContext, useState, useCallback } from 'react';
+import { createContext, useContext, useState, useCallback, useEffect } from 'react';
+import { authAPI } from '../services/api';
 
 const AppContext = createContext(null);
 
@@ -23,12 +24,67 @@ export function AppProvider({ children }) {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
     // Loading state
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
+
+    // Restore session on app load
+    useEffect(() => {
+        const restoreSession = async () => {
+            try {
+                const token = localStorage.getItem('token');
+                const savedUser = localStorage.getItem('user');
+
+                if (token && savedUser) {
+                    // Validate token with backend
+                    const result = await authAPI.getMe(token);
+
+                    if (result.success) {
+                        setUser(result.data);
+                        setIsAuthenticated(true);
+                        // Update stored user data
+                        localStorage.setItem('user', JSON.stringify(result.data));
+                    } else {
+                        // Token is invalid, clear storage
+                        localStorage.removeItem('token');
+                        localStorage.removeItem('user');
+                    }
+                }
+            } catch (error) {
+                console.error('Session restore error:', error);
+                // On error, try to use cached user data
+                const savedUser = localStorage.getItem('user');
+                if (savedUser) {
+                    try {
+                        setUser(JSON.parse(savedUser));
+                        setIsAuthenticated(true);
+                    } catch {
+                        localStorage.removeItem('user');
+                    }
+                }
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        restoreSession();
+    }, []);
+
+    // Open login modal
+    const openLoginModal = useCallback(() => {
+        setModalType('login');
+        setIsModalOpen(true);
+    }, []);
 
     // Open registration modal
     const openRegistrationModal = useCallback((plan = null) => {
         setSelectedPlan(plan);
         setModalType('registration');
+        setIsModalOpen(true);
+    }, []);
+
+    // Open checkout modal
+    const openCheckoutModal = useCallback((item) => {
+        setModalContent(item);
+        setModalType('checkout');
         setIsModalOpen(true);
     }, []);
 
@@ -54,18 +110,35 @@ export function AppProvider({ children }) {
         setSelectedPlan(null);
     }, []);
 
-    // Register user
+    // Register user (called after successful API registration)
     const registerUser = useCallback((userData) => {
         setUser(userData);
         setIsAuthenticated(true);
-        // In real app, this would save to backend
-        localStorage.setItem('genii_user', JSON.stringify(userData));
+    }, []);
+
+    // Login user
+    const loginUser = useCallback(async (phone, password) => {
+        try {
+            const result = await authAPI.login(phone, password);
+
+            if (result.success) {
+                localStorage.setItem('token', result.data.token);
+                localStorage.setItem('user', JSON.stringify(result.data.user));
+                setUser(result.data.user);
+                setIsAuthenticated(true);
+                return { success: true };
+            } else {
+                return { success: false, message: result.message };
+            }
+        } catch (error) {
+            console.error('Login error:', error);
+            return { success: false, message: 'Login failed. Please try again.' };
+        }
     }, []);
 
     // Complete purchase
     const completePurchase = useCallback((purchaseData) => {
         setPurchasedItems(prev => [...prev, purchaseData]);
-        // In real app, this would call backend API
         localStorage.setItem('genii_purchases', JSON.stringify([...purchasedItems, purchaseData]));
     }, [purchasedItems]);
 
@@ -96,7 +169,9 @@ export function AppProvider({ children }) {
     const logout = useCallback(() => {
         setUser(null);
         setIsAuthenticated(false);
-        localStorage.removeItem('genii_user');
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        localStorage.removeItem('genii_purchases');
     }, []);
 
     const value = {
@@ -104,6 +179,7 @@ export function AppProvider({ children }) {
         user,
         isAuthenticated,
         registerUser,
+        loginUser,
         logout,
 
         // Class selection
@@ -115,7 +191,9 @@ export function AppProvider({ children }) {
         modalContent,
         modalType,
         selectedPlan,
+        openLoginModal,
         openRegistrationModal,
+        openCheckoutModal,
         openPDFPreview,
         openVideoPreview,
         closeModal,

@@ -12,13 +12,15 @@ import {
     Check,
     BookOpen,
     Stethoscope,
-    Loader2
+    Loader2,
+    LogIn
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { CLASSES, BOARD_TYPES } from '../../data/mockData';
+import { authAPI } from '../../services/api';
 import './RegistrationForm.css';
 
-function RegistrationForm() {
+function RegistrationForm({ onSwitchToLogin }) {
     const { registerUser, closeModal, selectedPlan, completePurchase } = useApp();
 
     // Multi-step form (1: Class/Board, 2: Personal Details, 3: Contact & Location)
@@ -40,6 +42,7 @@ function RegistrationForm() {
     const [errors, setErrors] = useState({});
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
+    const [apiError, setApiError] = useState('');
 
     const classIcons = {
         class10: <BookOpen size={32} />,
@@ -148,26 +151,47 @@ function RegistrationForm() {
         if (!validateStep3()) return;
 
         setIsSubmitting(true);
+        setApiError('');
 
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 1500));
+        try {
+            // Prepare user data for API
+            const userData = {
+                name: formData.name,
+                email: formData.email,
+                phone: formData.whatsapp,
+                password: formData.password,
+                classId: selectedClass,
+                board: selectedBoard,
+                school: selectedClass === 'neet' ? formData.institution : formData.school,
+                pincode: formData.pincode
+            };
 
-        // Register user
-        const userData = {
-            ...formData,
-            classId: selectedClass,
-            board: selectedBoard
-        };
+            // Call backend API to register user
+            const result = await authAPI.register(userData);
 
-        registerUser(userData);
+            if (!result.success) {
+                throw new Error(result.message || 'Registration failed');
+            }
 
-        // If there's a selected plan, complete purchase
-        if (selectedPlan) {
-            completePurchase(selectedPlan, selectedClass);
+            // Store token and user data in localStorage
+            localStorage.setItem('token', result.data.token);
+            localStorage.setItem('user', JSON.stringify(result.data.user));
+
+            // Update app context
+            registerUser(result.data.user);
+
+            // If there's a selected plan, complete purchase
+            if (selectedPlan) {
+                completePurchase(selectedPlan, selectedClass);
+            }
+
+            setIsSuccess(true);
+        } catch (error) {
+            console.error('Registration error:', error);
+            setApiError(error.message || 'Registration failed. Please try again.');
+        } finally {
+            setIsSubmitting(false);
         }
-
-        setIsSubmitting(false);
-        setIsSuccess(true);
     };
 
     // Render class selection (Step 1)
@@ -212,6 +236,17 @@ function RegistrationForm() {
                             </button>
                         ))}
                     </div>
+                </div>
+            )}
+
+            {/* Login link */}
+            {onSwitchToLogin && (
+                <div className="login-link-section">
+                    <p>Already have an account?</p>
+                    <button type="button" className="login-link-btn" onClick={onSwitchToLogin}>
+                        <LogIn size={16} />
+                        <span>Login</span>
+                    </button>
                 </div>
             )}
         </div>

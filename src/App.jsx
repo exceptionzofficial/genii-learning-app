@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { useState } from 'react';
 import { AppProvider, useApp } from './context/AppContext';
 
 // Components
@@ -6,7 +7,9 @@ import Header from './components/Header/Header';
 import Footer from './components/Footer/Footer';
 import Modal from './components/Modal/Modal';
 import RegistrationForm from './components/RegistrationForm/RegistrationForm';
+import LoginForm from './components/LoginForm/LoginForm';
 import PDFPreviewModal from './components/PDFPreviewModal/PDFPreviewModal';
+import CheckoutModal from './components/CheckoutModal/CheckoutModal';
 
 // Pages
 import Home from './pages/Home/Home';
@@ -21,12 +24,43 @@ import Profile from './pages/Profile/Profile';
 import './App.css';
 
 function ModalManager() {
-  const { modalType, modalContent, closeModal, openRegistrationModal } = useApp();
+  const {
+    modalType,
+    modalContent,
+    closeModal,
+    openLoginModal,
+    openCheckoutModal,
+    isAuthenticated
+  } = useApp();
+  const [showLogin, setShowLogin] = useState(true);
+
+  if (modalType === 'login') {
+    return (
+      <Modal title="Login">
+        {showLogin ? (
+          <LoginForm onSwitchToRegister={() => setShowLogin(false)} />
+        ) : (
+          <RegistrationForm onSwitchToLogin={() => setShowLogin(true)} />
+        )}
+      </Modal>
+    );
+  }
 
   if (modalType === 'registration') {
     return (
-      <Modal title="Complete Your Purchase">
-        <RegistrationForm />
+      <Modal title="Create Account">
+        <RegistrationForm onSwitchToLogin={() => {
+          closeModal();
+          openLoginModal();
+        }} />
+      </Modal>
+    );
+  }
+
+  if (modalType === 'checkout' && modalContent) {
+    return (
+      <Modal title="Checkout">
+        <CheckoutModal item={modalContent} onClose={closeModal} />
       </Modal>
     );
   }
@@ -34,12 +68,18 @@ function ModalManager() {
   if (modalType === 'pdfPreview' && modalContent) {
     const handleBuy = () => {
       closeModal();
-      openRegistrationModal({
-        id: modalContent.id,
-        name: modalContent.title,
-        type: 'single-pdf',
-        price: 199,
-      });
+      if (isAuthenticated) {
+        // User is logged in - open checkout
+        openCheckoutModal({
+          id: modalContent.id || modalContent.contentId,
+          name: modalContent.title,
+          type: 'single-pdf',
+          price: 199,
+        });
+      } else {
+        // User not logged in - open login modal
+        openLoginModal();
+      }
     };
 
     return (

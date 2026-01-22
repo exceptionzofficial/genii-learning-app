@@ -1,30 +1,60 @@
-import { FileText, Eye, BookOpen, ShoppingCart } from 'lucide-react';
+import { FileText, Eye, BookOpen, ShoppingCart, Download } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import './PDFCard.css';
 
 function PDFCard({ pdf, showBuyButton = true }) {
-    const { openPDFPreview, openRegistrationModal, isItemPurchased, isClassPackagePurchased, selectedClass } = useApp();
+    const {
+        openPDFPreview,
+        openLoginModal,
+        openCheckoutModal,
+        isItemPurchased,
+        isClassPackagePurchased,
+        selectedClass,
+        isAuthenticated
+    } = useApp();
 
-    const isPurchased = isItemPurchased(pdf.id) || isClassPackagePurchased(selectedClass, 'pdfs');
+    const isPurchased = isItemPurchased(pdf.id || pdf.contentId) || isClassPackagePurchased(selectedClass, 'pdfs');
 
     const handlePreview = () => {
         openPDFPreview(pdf);
     };
 
     const handleBuy = () => {
-        openRegistrationModal({
-            id: pdf.id,
-            name: pdf.title,
-            type: 'single-pdf',
-            price: 199, // Individual PDF price (placeholder)
-        });
+        if (isAuthenticated) {
+            // User is logged in - proceed to checkout
+            openCheckoutModal({
+                id: pdf.id || pdf.contentId,
+                name: pdf.title,
+                type: 'single-pdf',
+                price: 199,
+            });
+        } else {
+            // User not logged in - open login modal
+            openLoginModal();
+        }
+    };
+
+    const handleDownload = () => {
+        if (pdf.fileUrl) {
+            // Open PDF in new tab or trigger download
+            window.open(pdf.fileUrl, '_blank');
+        } else {
+            alert('PDF file is not available for download yet.');
+        }
     };
 
     return (
         <div className="pdf-card">
+            {/* Purchased Badge */}
+            {isPurchased && (
+                <div className="purchased-badge">
+                    <span>✓ Purchased</span>
+                </div>
+            )}
+
             {/* Thumbnail */}
             <div className="pdf-thumbnail">
-                <img src={pdf.thumbnail} alt={pdf.title} />
+                <img src={pdf.thumbnail || pdf.thumbnailUrl} alt={pdf.title} />
                 <div className="pdf-overlay">
                     <button className="preview-btn" onClick={handlePreview}>
                         <Eye size={18} />
@@ -54,9 +84,9 @@ function PDFCard({ pdf, showBuyButton = true }) {
                 {showBuyButton && (
                     <div className="pdf-actions">
                         {isPurchased ? (
-                            <button className="btn btn-secondary btn-sm">
-                                <FileText size={16} />
-                                <span>Download</span>
+                            <button className="btn btn-success btn-sm" onClick={handleDownload}>
+                                <Download size={16} />
+                                <span>Download PDF</span>
                             </button>
                         ) : (
                             <button className="btn btn-primary btn-sm" onClick={handleBuy}>

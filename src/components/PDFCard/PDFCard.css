@@ -143,3 +143,34 @@
 .pdf-actions .btn {
     flex: 1;
 }
+
+/* Purchased Badge */
+.purchased-badge {
+    position: absolute;
+    top: var(--space-3);
+    right: var(--space-3);
+    padding: var(--space-1) var(--space-3);
+    background: rgba(39, 174, 96, 0.95);
+    color: white;
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-semibold);
+    border-radius: var(--radius-full);
+    z-index: 10;
+}
+
+/* Success Button */
+.btn-success {
+    background: linear-gradient(135deg, #27ae60, #219a52);
+    color: white;
+    border: none;
+}
+
+.btn-success:hover {
+    background: linear-gradient(135deg, #2ecc71, #27ae60);
+    transform: translateY(-1px);
+}
+
+/* Make card position relative for badge */
+.pdf-card {
+    position: relative;
+}

@@ -1,0 +1,146 @@
+.login-form {
+    padding: 20px;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.login-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.login-header h2 {
+    font-size: 24px;
+    color: #2c3e50;
+    margin: 0 0 8px;
+}
+
+.login-header p {
+    font-size: 14px;
+    color: #7f8c8d;
+    margin: 0;
+}
+
+.api-error {
+    background: rgba(231, 76, 60, 0.1);
+    border: 1px solid rgba(231, 76, 60, 0.3);
+    color: #e74c3c;
+    padding: 12px 16px;
+    border-radius: 10px;
+    font-size: 14px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.login-form .form-group {
+    margin-bottom: 20px;
+}
+
+.login-form .form-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 8px;
+}
+
+.login-form .form-label svg {
+    color: #1abc9c;
+}
+
+.login-form .form-input {
+    width: 100%;
+    padding: 14px 16px;
+    border: 2px solid #ecf0f1;
+    border-radius: 12px;
+    font-size: 15px;
+    transition: all 0.3s ease;
+    background: #f8f9fa;
+}
+
+.login-form .form-input:focus {
+    outline: none;
+    border-color: #1abc9c;
+    background: white;
+    box-shadow: 0 0 0 4px rgba(26, 188, 156, 0.1);
+}
+
+.login-form .form-input-error {
+    border-color: #e74c3c;
+}
+
+.login-form .form-error {
+    display: block;
+    color: #e74c3c;
+    font-size: 12px;
+    margin-top: 6px;
+}
+
+.login-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 16px;
+    font-size: 16px;
+    font-weight: 600;
+    margin-top: 10px;
+}
+
+.login-btn .animate-spin {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.login-footer {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #ecf0f1;
+    text-align: center;
+}
+
+.login-footer p {
+    font-size: 14px;
+    color: #7f8c8d;
+    margin: 0 0 12px;
+}
+
+.switch-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    background: #ecf0f1;
+    border: none;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #2c3e50;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.switch-btn:hover {
+    background: #1abc9c;
+    color: white;
+}
+
+.switch-btn svg {
+    color: #1abc9c;
+}
+
+.switch-btn:hover svg {
+    color: white;
+}

@@ -8,15 +8,27 @@ function PricingCard({
     features = [],
     classId
 }) {
-    const { openRegistrationModal, isClassPackagePurchased } = useApp();
+    const {
+        openLoginModal,
+        openCheckoutModal,
+        isClassPackagePurchased,
+        isAuthenticated
+    } = useApp();
 
     const isPurchased = isClassPackagePurchased(classId, plan.type);
 
     const handleBuyClick = () => {
-        openRegistrationModal({
-            ...plan,
-            classId
-        });
+        if (isAuthenticated) {
+            // User is logged in - proceed to checkout
+            openCheckoutModal({
+                ...plan,
+                classId,
+                purchasedAt: new Date().toISOString()
+            });
+        } else {
+            // User not logged in - open login modal
+            openLoginModal();
+        }
     };
 
     return (
