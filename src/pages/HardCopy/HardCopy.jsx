@@ -14,7 +14,7 @@ import { CLASSES, HARD_COPY_PRICING } from '../../data/mockData';
 import './HardCopy.css';
 
 function HardCopy() {
-    const { selectedClass, setSelectedClass } = useApp();
+    const { selectedClass, setSelectedClass, isAuthenticated } = useApp();
 
     const [formData, setFormData] = useState({
         name: '',
@@ -261,21 +261,23 @@ function HardCopy() {
                             </h2>
 
                             {/* Class Selection */}
-                            <div className="summary-class-select">
-                                <label>Select Class</label>
-                                <div className="class-options">
-                                    {CLASSES.map((cls) => (
-                                        <button
-                                            key={cls.id}
-                                            type="button"
-                                            className={`class-option ${selectedClass === cls.id ? 'class-option-active' : ''}`}
-                                            onClick={() => setSelectedClass(cls.id)}
-                                        >
-                                            {cls.name}
-                                        </button>
-                                    ))}
+                            {!isAuthenticated && (
+                                <div className="summary-class-select">
+                                    <label>Select Class</label>
+                                    <div className="class-options">
+                                        {CLASSES.map((cls) => (
+                                            <button
+                                                key={cls.id}
+                                                type="button"
+                                                className={`class-option ${selectedClass === cls.id ? 'class-option-active' : ''}`}
+                                                onClick={() => setSelectedClass(cls.id)}
+                                            >
+                                                {cls.name}
+                                            </button>
+                                        ))}
+                                    </div>
                                 </div>
-                            </div>
+                            )}
 
                             {/* Order Details */}
                             <div className="summary-details">

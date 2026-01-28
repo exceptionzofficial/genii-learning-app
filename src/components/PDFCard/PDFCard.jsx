@@ -1,4 +1,4 @@
-import { FileText, Eye, BookOpen, ShoppingCart, Download } from 'lucide-react';
+import { FileText, Eye, BookOpen, ShoppingCart, Download, IndianRupee } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import './PDFCard.css';
 
@@ -8,12 +8,13 @@ function PDFCard({ pdf, showBuyButton = true }) {
         openLoginModal,
         openCheckoutModal,
         isItemPurchased,
-        isClassPackagePurchased,
-        selectedClass,
         isAuthenticated
     } = useApp();
 
-    const isPurchased = isItemPurchased(pdf.id || pdf.contentId) || isClassPackagePurchased(selectedClass, 'pdfs');
+    // Get price from content or use default
+    const pdfPrice = pdf.price !== undefined ? pdf.price : 199;
+
+    const isPurchased = isItemPurchased(pdf.id || pdf.contentId);
 
     const handlePreview = () => {
         openPDFPreview(pdf);
@@ -21,12 +22,12 @@ function PDFCard({ pdf, showBuyButton = true }) {
 
     const handleBuy = () => {
         if (isAuthenticated) {
-            // User is logged in - proceed to checkout
+            // User is logged in - proceed to checkout with actual price
             openCheckoutModal({
                 id: pdf.id || pdf.contentId,
                 name: pdf.title,
                 type: 'single-pdf',
-                price: 199,
+                price: pdfPrice,
             });
         } else {
             // User not logged in - open login modal
@@ -49,6 +50,13 @@ function PDFCard({ pdf, showBuyButton = true }) {
             {isPurchased && (
                 <div className="purchased-badge">
                     <span>✓ Purchased</span>
+                </div>
+            )}
+
+            {/* Price/Free Badge */}
+            {!isPurchased && (
+                <div className={`price-badge ${pdf.isFree ? 'free' : ''}`}>
+                    <span>{pdf.isFree ? 'FREE' : `₹${pdfPrice}`}</span>
                 </div>
             )}
 
@@ -83,15 +91,15 @@ function PDFCard({ pdf, showBuyButton = true }) {
                 {/* Actions */}
                 {showBuyButton && (
                     <div className="pdf-actions">
-                        {isPurchased ? (
-                            <button className="btn btn-success btn-sm" onClick={handleDownload}>
+                        {isPurchased || pdf.isFree ? (
+                            <button className={`btn btn-sm ${pdf.isFree && !isPurchased ? 'btn-primary' : 'btn-success'}`} onClick={handleDownload}>
                                 <Download size={16} />
-                                <span>Download PDF</span>
+                                <span>{pdf.isFree && !isPurchased ? 'Download Free PDF' : 'Download PDF'}</span>
                             </button>
                         ) : (
                             <button className="btn btn-primary btn-sm" onClick={handleBuy}>
                                 <ShoppingCart size={16} />
-                                <span>Buy Now</span>
+                                <span>Buy ₹{pdfPrice}</span>
                             </button>
                         )}
                     </div>

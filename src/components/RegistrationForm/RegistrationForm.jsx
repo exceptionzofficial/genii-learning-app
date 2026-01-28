@@ -21,7 +21,7 @@ import { authAPI } from '../../services/api';
 import './RegistrationForm.css';
 
 function RegistrationForm({ onSwitchToLogin }) {
-    const { registerUser, closeModal, selectedPlan, completePurchase } = useApp();
+    const { registerUser, closeModal, completePurchase } = useApp();
 
     // Multi-step form (1: Class/Board, 2: Personal Details, 3: Contact & Location)
     const [step, setStep] = useState(1);
@@ -180,10 +180,7 @@ function RegistrationForm({ onSwitchToLogin }) {
             // Update app context
             registerUser(result.data.user);
 
-            // If there's a selected plan, complete purchase
-            if (selectedPlan) {
-                completePurchase(selectedPlan, selectedClass);
-            }
+
 
             setIsSuccess(true);
         } catch (error) {
@@ -441,16 +438,7 @@ function RegistrationForm({ onSwitchToLogin }) {
                 </div>
             </div>
 
-            {/* Show selected plan if any */}
-            {selectedPlan && (
-                <div className="plan-summary">
-                    <span className="plan-label">Selected Plan</span>
-                    <div className="plan-details">
-                        <span className="plan-name">{selectedPlan.name}</span>
-                        <span className="plan-price">₹{selectedPlan.price?.toLocaleString()}</span>
-                    </div>
-                </div>
-            )}
+
 
             <button
                 type="submit"
@@ -465,7 +453,7 @@ function RegistrationForm({ onSwitchToLogin }) {
                     </>
                 ) : (
                     <>
-                        <span>{selectedPlan ? 'Create Account & Pay' : 'Create Account'}</span>
+                        <span>Create Account</span>
                         <ArrowRight size={18} />
                     </>
                 )}
@@ -486,9 +474,7 @@ function RegistrationForm({ onSwitchToLogin }) {
                 </div>
                 <h3>Account Created Successfully!</h3>
                 <p>Welcome to Genii Books. Your learning journey begins now.</p>
-                {selectedPlan && (
-                    <p className="purchase-note">Your purchase has been completed. You can access your content from My Downloads.</p>
-                )}
+
                 <button className="btn btn-primary" onClick={closeModal}>
                     Start Learning
                 </button>

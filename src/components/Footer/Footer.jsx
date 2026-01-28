@@ -18,7 +18,6 @@ function Footer() {
         { path: '/', label: 'Home' },
         { path: '/materials', label: 'Study Materials' },
         { path: '/videos', label: 'Video Courses' },
-        { path: '/pricing', label: 'Pricing' },
         { path: '/hard-copy', label: 'Order Hard Copy' },
     ];
 
@@ -42,7 +41,7 @@ function Footer() {
                     <p className="footer-description">
                         Empowering students with quality education materials for academic excellence.
                     </p>
-                    <div className="footer-social">
+                    {/* <div className="footer-social">
                         <a href="#" className="social-link" aria-label="Facebook">
                             <Facebook size={18} />
                         </a>
@@ -55,7 +54,7 @@ function Footer() {
                         <a href="#" className="social-link" aria-label="YouTube">
                             <Youtube size={18} />
                         </a>
-                    </div>
+                    </div> */}
                 </div>
 
                 {/* Quick Links */}
@@ -96,11 +95,11 @@ function Footer() {
                     <ul className="footer-contact">
                         <li>
                             <Mail size={16} />
-                            <span>support@genii.edu</span>
+                            <span>geniibookschennai@gmail.com</span>
                         </li>
                         <li>
                             <Phone size={16} />
-                            <span>+91 98765 43210</span>
+                            <span>+91 94442 98899</span>
                         </li>
                         <li>
                             <MapPin size={16} />

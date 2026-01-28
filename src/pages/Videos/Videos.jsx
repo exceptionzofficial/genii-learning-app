@@ -7,7 +7,7 @@ import { SUBJECTS, CLASSES } from '../../data/mockData';
 import './Videos.css';
 
 function Videos() {
-    const { selectedClass, setSelectedClass, selectedBoard } = useApp();
+    const { selectedClass, setSelectedClass, selectedBoard, isAuthenticated } = useApp();
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedSubject, setSelectedSubject] = useState('all');
     const [videos, setVideos] = useState([]);
@@ -52,7 +52,7 @@ function Videos() {
 
     // Transform API data to match VideoCard expected format
     const transformedVideos = filteredVideos.map(video => ({
-        id: video._id,
+        id: video.contentId || video.id || video._id,
         title: video.title,
         description: video.description || `${video.lessons || 0} lessons`,
         subject: video.subject,
@@ -60,6 +60,8 @@ function Videos() {
         lessons: video.lessons || 0,
         duration: video.duration || 'N/A',
         instructor: 'Genii Books',
+        price: video.price,
+        isFree: video.isFree,
         fileUrl: video.fileUrl,
         classId: video.classId,
         board: video.board
@@ -81,20 +83,22 @@ function Videos() {
                 {/* Filters Section */}
                 <div className="filters-section">
                     {/* Class Tabs */}
-                    <div className="class-tabs">
-                        {CLASSES.map((cls) => (
-                            <button
-                                key={cls.id}
-                                className={`class-tab ${selectedClass === cls.id ? 'class-tab-active' : ''}`}
-                                onClick={() => {
-                                    setSelectedClass(cls.id);
-                                    setSelectedSubject('all');
-                                }}
-                            >
-                                {cls.name}
-                            </button>
-                        ))}
-                    </div>
+                    {!isAuthenticated && (
+                        <div className="class-tabs">
+                            {CLASSES.map((cls) => (
+                                <button
+                                    key={cls.id}
+                                    className={`class-tab ${selectedClass === cls.id ? 'class-tab-active' : ''}`}
+                                    onClick={() => {
+                                        setSelectedClass(cls.id);
+                                        setSelectedSubject('all');
+                                    }}
+                                >
+                                    {cls.name}
+                                </button>
+                            ))}
+                        </div>
+                    )}
 
                     {/* Search and Filters */}
                     <div className="filters-row">

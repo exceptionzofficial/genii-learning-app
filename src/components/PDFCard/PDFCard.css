@@ -158,6 +158,26 @@
     z-index: 10;
 }
 
+/* Price Badge */
+.price-badge {
+    position: absolute;
+    top: var(--space-3);
+    right: var(--space-3);
+    padding: var(--space-1) var(--space-3);
+    background: linear-gradient(135deg, #1abc9c, #16a085);
+    color: white;
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-bold);
+    border-radius: var(--radius-full);
+    z-index: 10;
+    box-shadow: 0 2px 8px rgba(26, 188, 156, 0.3);
+}
+
+.price-badge.free {
+    background: linear-gradient(135deg, #27ae60, #2ecc71);
+    box-shadow: 0 2px 8px rgba(39, 174, 96, 0.3);
+}
+
 /* Success Button */
 .btn-success {
     background: linear-gradient(135deg, #27ae60, #219a52);

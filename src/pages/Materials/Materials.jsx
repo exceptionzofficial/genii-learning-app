@@ -7,7 +7,7 @@ import { SUBJECTS, CLASSES } from '../../data/mockData';
 import './Materials.css';
 
 function Materials() {
-    const { selectedClass, setSelectedClass, selectedBoard } = useApp();
+    const { selectedClass, setSelectedClass, selectedBoard, isAuthenticated } = useApp();
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedSubject, setSelectedSubject] = useState('all');
     const [viewMode, setViewMode] = useState('grid');
@@ -53,7 +53,7 @@ function Materials() {
 
     // Transform API data to match PDFCard expected format
     const transformedMaterials = filteredMaterials.map(pdf => ({
-        id: pdf._id,
+        id: pdf.contentId || pdf.id || pdf._id,
         title: pdf.title,
         description: pdf.description || `${pdf.chapters || 0} chapters, ${pdf.pages || 0} pages`,
         subject: pdf.subject,
@@ -61,6 +61,8 @@ function Materials() {
         chapters: pdf.chapters || 0,
         pages: pdf.pages || 0,
         previewPages: pdf.previewPages || 5,
+        price: pdf.price,
+        isFree: pdf.isFree,
         fileUrl: pdf.fileUrl,
         classId: pdf.classId,
         board: pdf.board
@@ -82,20 +84,22 @@ function Materials() {
                 {/* Filters Section */}
                 <div className="filters-section">
                     {/* Class Tabs */}
-                    <div className="class-tabs">
-                        {CLASSES.map((cls) => (
-                            <button
-                                key={cls.id}
-                                className={`class-tab ${selectedClass === cls.id ? 'class-tab-active' : ''}`}
-                                onClick={() => {
-                                    setSelectedClass(cls.id);
-                                    setSelectedSubject('all');
-                                }}
-                            >
-                                {cls.name}
-                            </button>
-                        ))}
-                    </div>
+                    {!isAuthenticated && (
+                        <div className="class-tabs">
+                            {CLASSES.map((cls) => (
+                                <button
+                                    key={cls.id}
+                                    className={`class-tab ${selectedClass === cls.id ? 'class-tab-active' : ''}`}
+                                    onClick={() => {
+                                        setSelectedClass(cls.id);
+                                        setSelectedSubject('all');
+                                    }}
+                                >
+                                    {cls.name}
+                                </button>
+                            ))}
+                        </div>
+                    )}
 
                     {/* Search and Filters */}
                     <div className="filters-row">

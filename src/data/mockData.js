@@ -21,29 +21,7 @@ export const SUBJECTS = {
     'neet': ['Physics', 'Chemistry', 'Biology', 'Zoology', 'Botany']
 };
 
-// Placeholder pricing - actual prices set by admin
-export const PRICING = {
-    'class10': {
-        pdfs: { price: 1500, originalPrice: 2000, name: 'All PDFs Package' },
-        videos: { price: 2000, originalPrice: 2500, name: 'All Videos Package' },
-        bundle: { price: 3000, originalPrice: 4000, name: 'Complete Bundle' }
-    },
-    'class11': {
-        pdfs: { price: 1800, originalPrice: 2500, name: 'All PDFs Package' },
-        videos: { price: 2500, originalPrice: 3200, name: 'All Videos Package' },
-        bundle: { price: 4000, originalPrice: 5200, name: 'Complete Bundle' }
-    },
-    'class12': {
-        pdfs: { price: 2000, originalPrice: 2800, name: 'All PDFs Package' },
-        videos: { price: 3000, originalPrice: 3800, name: 'All Videos Package' },
-        bundle: { price: 4500, originalPrice: 6000, name: 'Complete Bundle' }
-    },
-    'neet': {
-        pdfs: { price: 2500, originalPrice: 3500, name: 'All PDFs Package' },
-        videos: { price: 3500, originalPrice: 4500, name: 'All Videos Package' },
-        bundle: { price: 5500, originalPrice: 7500, name: 'Complete Bundle' }
-    }
-};
+
 
 // Hard Copy Pricing (placeholder)
 export const HARD_COPY_PRICING = {
@@ -459,7 +437,7 @@ export const FAQS = [
     },
     {
         question: 'Is this a subscription or one-time purchase?',
-        answer: 'All our packages are one-time purchases with lifetime access. You pay once and get permanent access to all materials in your package.'
+        answer: 'All our materials are one-time purchases with lifetime access. You pay once for each PDF or video and get permanent access.'
     },
     {
         question: 'How do I download my purchased PDFs?',
@@ -467,7 +445,7 @@ export const FAQS = [
     },
     {
         question: 'Can I order hard copies of the materials?',
-        answer: 'Yes! We offer printed hard copies delivered to your doorstep. Select "Order Hard Copy" on the pricing page and fill in your delivery details.'
+        answer: 'Yes! We offer printed hard copies delivered to your doorstep. Go to the "Hard Copy" section in the menu and fill in your delivery details.'
     },
     {
         question: 'What payment methods are accepted?',

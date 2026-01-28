@@ -10,7 +10,8 @@ import {
     ChevronDown,
     User,
     LogOut,
-    Home
+    Home,
+    Bell
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { CLASSES } from '../../data/mockData';
@@ -36,8 +37,8 @@ function Header() {
         { path: '/', label: 'Home', icon: Home },
         { path: '/materials', label: 'Materials', icon: FileText },
         { path: '/videos', label: 'Videos', icon: Video },
-        { path: '/pricing', label: 'Pricing', icon: CreditCard },
         { path: '/hard-copy', label: 'Hard Copy', icon: Truck },
+        { path: '/notifications', label: 'Notifications', icon: Bell },
     ];
 
     const handleNavClick = () => {
@@ -99,6 +100,7 @@ function Header() {
                             value={selectedClass}
                             onChange={handleClassChange}
                             className="class-select"
+                            disabled={isAuthenticated}
                         >
                             {CLASSES.map((cls) => (
                                 <option key={cls.id} value={cls.id}>
@@ -180,6 +182,7 @@ function Header() {
                             handleClassChange(e);
                         }}
                         className="class-select"
+                        disabled={isAuthenticated}
                     >
                         {CLASSES.map((cls) => (
                             <option key={cls.id} value={cls.id}>

@@ -14,7 +14,9 @@ import {
     ChevronRight
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
-import { CLASSES, FEATURES, TESTIMONIALS, STATS } from '../../data/mockData';
+import { CLASSES, FEATURES, STATS } from '../../data/mockData';
+import { reviewsAPI } from '../../services/api';
+import { useState, useEffect } from 'react';
 import './Home.css';
 
 // Icon mapping for features
@@ -28,7 +30,27 @@ const iconMap = {
 };
 
 function Home() {
-    const { setSelectedClass } = useApp();
+    const { setSelectedClass, isAuthenticated } = useApp();
+    const [reviews, setReviews] = useState([]);
+    const [loadingReviews, setLoadingReviews] = useState(true);
+
+    useEffect(() => {
+        const fetchReviews = async () => {
+            try {
+                const response = await reviewsAPI.getReviews();
+                if (response.success) {
+                    // Only show active reviews
+                    setReviews(response.data.filter(r => r.status === 'active'));
+                }
+            } catch (error) {
+                console.error('Error fetching reviews:', error);
+            } finally {
+                setLoadingReviews(false);
+            }
+        };
+
+        fetchReviews();
+    }, []);
 
     const handleClassSelect = (classId) => {
         setSelectedClass(classId);
@@ -58,8 +80,8 @@ function Home() {
                                 <span>Explore Materials</span>
                                 <ArrowRight size={18} />
                             </Link>
-                            <Link to="/pricing" className="btn btn-secondary btn-lg">
-                                <span>View Pricing</span>
+                            <Link to="/videos" className="btn btn-secondary btn-lg">
+                                <span>Watch Videos</span>
                             </Link>
                         </div>
                         <div className="hero-stats">
@@ -75,36 +97,38 @@ function Home() {
             </section>
 
             {/* Class Selection Section */}
-            <section className="classes-section section">
-                <div className="container">
-                    <div className="section-header">
-                        <h2 className="section-title">Choose Your Class</h2>
-                        <p className="section-description">
-                            Select your class to view tailored study materials and courses
-                        </p>
+            {!isAuthenticated && (
+                <section className="classes-section section">
+                    <div className="container">
+                        <div className="section-header">
+                            <h2 className="section-title">Choose Your Class</h2>
+                            <p className="section-description">
+                                Select your class to view tailored study materials and courses
+                            </p>
+                        </div>
+                        <div className="classes-grid">
+                            {CLASSES.map((cls) => (
+                                <Link
+                                    key={cls.id}
+                                    to="/materials"
+                                    className="class-card"
+                                    onClick={() => handleClassSelect(cls.id)}
+                                >
+                                    <div className="class-icon">
+                                        <BookOpen size={28} />
+                                    </div>
+                                    <h3 className="class-name">{cls.name}</h3>
+                                    <p className="class-description">{cls.description}</p>
+                                    <span className="class-link">
+                                        <span>View Materials</span>
+                                        <ChevronRight size={16} />
+                                    </span>
+                                </Link>
+                            ))}
+                        </div>
                     </div>
-                    <div className="classes-grid">
-                        {CLASSES.map((cls) => (
-                            <Link
-                                key={cls.id}
-                                to="/materials"
-                                className="class-card"
-                                onClick={() => handleClassSelect(cls.id)}
-                            >
-                                <div className="class-icon">
-                                    <BookOpen size={28} />
-                                </div>
-                                <h3 className="class-name">{cls.name}</h3>
-                                <p className="class-description">{cls.description}</p>
-                                <span className="class-link">
-                                    <span>View Materials</span>
-                                    <ChevronRight size={16} />
-                                </span>
-                            </Link>
-                        ))}
-                    </div>
-                </div>
-            </section>
+                </section>
+            )}
 
             {/* Features Section */}
             <section className="features-section section">
@@ -179,27 +203,31 @@ function Home() {
                         </p>
                     </div>
                     <div className="testimonials-grid">
-                        {TESTIMONIALS.map((testimonial) => (
-                            <div key={testimonial.id} className="testimonial-card">
-                                <div className="testimonial-header">
-                                    <img
-                                        src={testimonial.image}
-                                        alt={testimonial.name}
-                                        className="testimonial-avatar"
-                                    />
-                                    <div className="testimonial-info">
-                                        <h4 className="testimonial-name">{testimonial.name}</h4>
-                                        <span className="testimonial-class">{testimonial.class}</span>
-                                    </div>
-                                </div>
-                                <div className="testimonial-rating">
-                                    {[...Array(testimonial.rating)].map((_, i) => (
-                                        <Star key={i} size={14} fill="currentColor" />
-                                    ))}
-                                </div>
-                                <p className="testimonial-text">{testimonial.text}</p>
+                        {loadingReviews ? (
+                            <div className="loading-reviews">
+                                <Clock size={24} className="spin" />
+                                <span>Loading student stories...</span>
                             </div>
-                        ))}
+                        ) : reviews.length > 0 ? (
+                            reviews.map((testimonial) => (
+                                <div key={testimonial.reviewId || testimonial.id} className="testimonial-card">
+                                    <div className="testimonial-header">
+                                        <div className="testimonial-info">
+                                            <h4 className="testimonial-name">{testimonial.userName || testimonial.name}</h4>
+                                            <span className="testimonial-class">{testimonial.studentClass || testimonial.class}</span>
+                                        </div>
+                                    </div>
+                                    <div className="testimonial-rating">
+                                        {[...Array(parseInt(testimonial.rating) || 5)].map((_, i) => (
+                                            <Star key={i} size={14} fill="currentColor" />
+                                        ))}
+                                    </div>
+                                    <p className="testimonial-text">"{testimonial.comment || testimonial.text}"</p>
+                                </div>
+                            ))
+                        ) : (
+                            <p className="no-reviews">Check back soon for student testimonials!</p>
+                        )}
                     </div>
                 </div>
             </section>
@@ -214,7 +242,7 @@ function Home() {
                                 Get instant access to premium study materials and video courses
                             </p>
                             <div className="cta-actions">
-                                <Link to="/pricing" className="btn btn-primary btn-lg">
+                                <Link to="/materials" className="btn btn-primary btn-lg">
                                     <span>Get Started Now</span>
                                     <ArrowRight size={18} />
                                 </Link>

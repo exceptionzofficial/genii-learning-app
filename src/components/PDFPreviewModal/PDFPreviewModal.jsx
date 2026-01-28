@@ -14,8 +14,8 @@ function PDFPreviewModal({ pdf, onClose, onBuy }) {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    const maxPreviewPages = pdf.previewPages || 5;
     const totalPages = pdf.pages || numPages || 10;
+    const maxPreviewPages = pdf.isFree ? totalPages : (pdf.previewPages || 5);
 
     const handleDocumentLoadSuccess = ({ numPages }) => {
         setNumPages(numPages);
@@ -144,7 +144,7 @@ function PDFPreviewModal({ pdf, onClose, onBuy }) {
                                 </Document>
 
                                 {/* Preview watermark overlay */}
-                                {!loading && !error && (
+                                {!loading && !error && !pdf.isFree && (
                                     <div className="preview-watermark-overlay">
                                         <span>PREVIEW</span>
                                     </div>
@@ -177,17 +177,26 @@ function PDFPreviewModal({ pdf, onClose, onBuy }) {
                 <div className="pdf-preview-footer">
                     <div className="footer-info">
                         <p className="preview-limit">
-                            📖 Previewing first {displayPages} of {totalPages} pages
+                            📖 {pdf.isFree ? `Viewing all ${totalPages} pages` : `Previewing first ${displayPages} of ${totalPages} pages`}
                         </p>
-                        <p className="unlock-text">
-                            Purchase to unlock all {totalPages} pages
-                        </p>
+                        {!pdf.isFree && (
+                            <p className="unlock-text">
+                                Purchase to unlock all {totalPages} pages
+                            </p>
+                        )}
                     </div>
                     <div className="footer-actions">
-                        <button className="btn btn-primary btn-lg" onClick={onBuy}>
-                            <Download size={18} />
-                            <span>Get Full Access</span>
-                        </button>
+                        {pdf.isFree ? (
+                            <button className="btn btn-primary btn-lg" onClick={() => window.open(pdf.fileUrl, '_blank')}>
+                                <Download size={18} />
+                                <span>Download PDF</span>
+                            </button>
+                        ) : (
+                            <button className="btn btn-primary btn-lg" onClick={onBuy}>
+                                <Download size={18} />
+                                <span>Get Full Access</span>
+                            </button>
+                        )}
                     </div>
                 </div>
             </div>

@@ -1,30 +1,59 @@
-import { Play, Clock, BookOpen, Lock, CheckCircle } from 'lucide-react';
+import { Play, Clock, BookOpen, Lock, CheckCircle, ShoppingCart } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import './VideoCard.css';
 
 function VideoCard({ video, showUnlockButton = true }) {
-    const { openVideoPreview, openRegistrationModal, isClassPackagePurchased, selectedClass } = useApp();
+    const {
+        openVideoPreview,
+        openLoginModal,
+        openCheckoutModal,
+        isItemPurchased,
+        isAuthenticated
+    } = useApp();
 
-    const isUnlocked = isClassPackagePurchased(selectedClass, 'videos');
+    // Get price from content or use default
+    const videoPrice = video.price !== undefined ? video.price : 299;
+
+    const isUnlocked = isItemPurchased(video.id || video.contentId);
 
     const handlePreview = () => {
         openVideoPreview(video);
     };
 
     const handleUnlock = () => {
-        openRegistrationModal({
-            id: video.id,
-            name: video.title,
-            type: 'single-video',
-            price: 299, // Individual video price (placeholder)
-        });
+        if (isAuthenticated) {
+            // User is logged in - proceed to checkout with actual price
+            openCheckoutModal({
+                id: video.id || video.contentId,
+                name: video.title,
+                type: 'single-video',
+                price: videoPrice,
+            });
+        } else {
+            // User not logged in - open login modal
+            openLoginModal();
+        }
     };
 
     return (
         <div className="video-card">
+            {/* Purchased Badge */}
+            {isUnlocked && (
+                <div className="purchased-badge">
+                    <span>✓ Purchased</span>
+                </div>
+            )}
+
+            {/* Price/Free Badge */}
+            {!isUnlocked && (
+                <div className={`price-badge ${video.isFree ? 'free' : ''}`}>
+                    <span>{video.isFree ? 'FREE' : `₹${videoPrice}`}</span>
+                </div>
+            )}
+
             {/* Thumbnail */}
             <div className="video-thumbnail">
-                <img src={video.thumbnail} alt={video.title} />
+                <img src={video.thumbnail || video.thumbnailUrl} alt={video.title} />
                 <div className="video-overlay">
                     <button className="play-btn" onClick={handlePreview}>
                         <Play size={24} fill="currentColor" />
@@ -34,11 +63,6 @@ function VideoCard({ video, showUnlockButton = true }) {
                     <Clock size={12} />
                     <span>{video.duration}</span>
                 </span>
-                {!isUnlocked && (
-                    <div className="video-lock">
-                        <Lock size={16} />
-                    </div>
-                )}
             </div>
 
             {/* Content */}
@@ -51,7 +75,7 @@ function VideoCard({ video, showUnlockButton = true }) {
                         <BookOpen size={14} />
                         <span>{video.lessons} Lessons</span>
                     </span>
-                    <span className="video-instructor">By {video.instructor}</span>
+                    <span className="video-instructor">By {video.instructor || 'Genii Books'}</span>
                 </div>
 
                 <p className="video-description">{video.description}</p>
@@ -59,15 +83,15 @@ function VideoCard({ video, showUnlockButton = true }) {
                 {/* Actions */}
                 {showUnlockButton && (
                     <div className="video-actions">
-                        {isUnlocked ? (
-                            <button className="btn btn-secondary btn-sm" onClick={handlePreview}>
-                                <CheckCircle size={16} />
-                                <span>Watch Now</span>
+                        {isUnlocked || video.isFree ? (
+                            <button className={`btn btn-sm ${video.isFree && !isUnlocked ? 'btn-primary' : 'btn-success'}`} onClick={handlePreview}>
+                                <Play size={16} />
+                                <span>{video.isFree && !isUnlocked ? 'Watch Free' : 'Watch Now'}</span>
                             </button>
                         ) : (
                             <button className="btn btn-primary btn-sm" onClick={handleUnlock}>
-                                <Lock size={16} />
-                                <span>Unlock Course</span>
+                                <ShoppingCart size={16} />
+                                <span>Buy ₹{videoPrice}</span>
                             </button>
                         )}
                     </div>

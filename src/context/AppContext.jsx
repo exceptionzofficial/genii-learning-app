@@ -16,9 +16,7 @@ export function AppProvider({ children }) {
     const [modalContent, setModalContent] = useState(null);
     const [modalType, setModalType] = useState(null);
 
-    // Purchase state
     const [purchasedItems, setPurchasedItems] = useState([]);
-    const [selectedPlan, setSelectedPlan] = useState(null);
 
     // Mobile menu state
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -68,6 +66,13 @@ export function AppProvider({ children }) {
         restoreSession();
     }, []);
 
+    // Synchronize selectedClass with user's classId when authenticated
+    useEffect(() => {
+        if (isAuthenticated && user?.classId) {
+            setSelectedClass(user.classId);
+        }
+    }, [isAuthenticated, user]);
+
     // Open login modal
     const openLoginModal = useCallback(() => {
         setModalType('login');
@@ -75,8 +80,7 @@ export function AppProvider({ children }) {
     }, []);
 
     // Open registration modal
-    const openRegistrationModal = useCallback((plan = null) => {
-        setSelectedPlan(plan);
+    const openRegistrationModal = useCallback(() => {
         setModalType('registration');
         setIsModalOpen(true);
     }, []);
@@ -107,7 +111,6 @@ export function AppProvider({ children }) {
         setIsModalOpen(false);
         setModalContent(null);
         setModalType(null);
-        setSelectedPlan(null);
     }, []);
 
     // Register user (called after successful API registration)
@@ -147,13 +150,7 @@ export function AppProvider({ children }) {
         return purchasedItems.some(item => item.id === itemId);
     }, [purchasedItems]);
 
-    // Check if class package is purchased
-    const isClassPackagePurchased = useCallback((classId, packageType) => {
-        return purchasedItems.some(
-            item => item.classId === classId &&
-                (item.packageType === packageType || item.packageType === 'bundle')
-        );
-    }, [purchasedItems]);
+
 
     // Toggle mobile menu
     const toggleMobileMenu = useCallback(() => {
@@ -169,6 +166,7 @@ export function AppProvider({ children }) {
     const logout = useCallback(() => {
         setUser(null);
         setIsAuthenticated(false);
+        setSelectedClass('class10');
         localStorage.removeItem('token');
         localStorage.removeItem('user');
         localStorage.removeItem('genii_purchases');
@@ -190,7 +188,6 @@ export function AppProvider({ children }) {
         isModalOpen,
         modalContent,
         modalType,
-        selectedPlan,
         openLoginModal,
         openRegistrationModal,
         openCheckoutModal,
@@ -202,7 +199,6 @@ export function AppProvider({ children }) {
         purchasedItems,
         completePurchase,
         isItemPurchased,
-        isClassPackagePurchased,
 
         // Mobile menu
         isMobileMenuOpen,

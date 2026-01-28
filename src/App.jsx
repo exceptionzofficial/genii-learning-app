@@ -15,10 +15,10 @@ import CheckoutModal from './components/CheckoutModal/CheckoutModal';
 import Home from './pages/Home/Home';
 import Materials from './pages/Materials/Materials';
 import Videos from './pages/Videos/Videos';
-import Pricing from './pages/Pricing/Pricing';
 import HardCopy from './pages/HardCopy/HardCopy';
 import MyDownloads from './pages/MyDownloads/MyDownloads';
 import Profile from './pages/Profile/Profile';
+import Notifications from './pages/Notifications/Notifications';
 
 // Styles
 import './App.css';
@@ -74,7 +74,7 @@ function ModalManager() {
           id: modalContent.id || modalContent.contentId,
           name: modalContent.title,
           type: 'single-pdf',
-          price: 199,
+          price: modalContent.price !== undefined ? modalContent.price : 199,
         });
       } else {
         // User not logged in - open login modal
@@ -141,10 +141,10 @@ function AppContent() {
           <Route path="/" element={<Home />} />
           <Route path="/materials" element={<Materials />} />
           <Route path="/videos" element={<Videos />} />
-          <Route path="/pricing" element={<Pricing />} />
           <Route path="/hard-copy" element={<HardCopy />} />
           <Route path="/my-downloads" element={<MyDownloads />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/notifications" element={<Notifications />} />
         </Routes>
       </main>
       <Footer />

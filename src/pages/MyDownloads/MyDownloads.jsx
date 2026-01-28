@@ -8,7 +8,7 @@ function MyDownloads() {
 
     // Filter to only show PDF-related purchases
     const pdfPurchases = purchasedItems.filter(
-        item => item.packageType === 'pdfs' || item.packageType === 'bundle'
+        item => item.packageType === 'pdfs' || item.packageType === 'bundle' || item.type === 'single-pdf'
     );
 
     if (!isAuthenticated || purchasedItems.length === 0) {
@@ -30,8 +30,8 @@ function MyDownloads() {
                         </div>
                         <h2>No Purchases Yet</h2>
                         <p>You haven't purchased any materials yet. Browse our collection and get started!</p>
-                        <a href="/pricing" className="btn btn-primary">
-                            View Pricing Plans
+                        <a href="/materials" className="btn btn-primary">
+                            Browse Materials
                         </a>
                     </div>
                 </div>
@@ -55,7 +55,7 @@ function MyDownloads() {
                 {/* Purchase Summary */}
                 <div className="purchase-summary">
                     <h2>Your Purchases</h2>
-                    <p>You have access to {pdfPurchases.length} package(s)</p>
+                    <p>You have access to {purchasedItems.length} item(s)</p>
                 </div>
 
                 {/* Downloads List */}
@@ -69,12 +69,12 @@ function MyDownloads() {
                                         <FileText size={24} />
                                     </div>
                                     <div className="download-details">
-                                        <h3>{purchase.packageName}</h3>
+                                        <h3>{purchase.packageName || purchase.name}</h3>
                                         <p className="download-class">{classInfo?.name || purchase.classId}</p>
                                         <div className="download-meta">
                                             <span>
                                                 <Calendar size={14} />
-                                                Purchased: {new Date(purchase.purchaseDate).toLocaleDateString()}
+                                                Purchased: {purchase.purchaseDate ? new Date(purchase.purchaseDate).toLocaleDateString() : (purchase.purchasedAt ? new Date(purchase.purchasedAt).toLocaleDateString() : 'Recently')}
                                             </span>
                                         </div>
                                     </div>

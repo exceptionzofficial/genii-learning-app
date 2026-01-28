@@ -312,14 +312,14 @@ function Profile() {
                                     <FileText size={24} />
                                     <div className="stat-info">
                                         <span className="stat-number">{purchasedItems.filter(p => p.packageType === 'pdfs' || p.packageType === 'bundle' || p.type === 'single-pdf').length}</span>
-                                        <span className="stat-label">PDF Packages</span>
+                                        <span className="stat-label">PDFs Purchased</span>
                                     </div>
                                 </div>
                                 <div className="stat-item">
                                     <Video size={24} />
                                     <div className="stat-info">
-                                        <span className="stat-number">{purchasedItems.filter(p => p.packageType === 'videos' || p.packageType === 'bundle').length}</span>
-                                        <span className="stat-label">Video Courses</span>
+                                        <span className="stat-number">{purchasedItems.filter(p => p.packageType === 'videos' || p.packageType === 'bundle' || p.type === 'single-video').length}</span>
+                                        <span className="stat-label">Videos Unlocked</span>
                                     </div>
                                 </div>
                                 <div className="stat-item">

@@ -113,4 +113,24 @@ export const ordersAPI = {
     }
 };
 
-export default { authAPI, contentAPI, pricingAPI, ordersAPI };
+// Reviews API
+export const reviewsAPI = {
+    getReviews: async () => {
+        const response = await fetch(`${API_URL}/reviews`);
+        return response.json();
+    }
+};
+
+// Notifications API
+export const notificationsAPI = {
+    getNotifications: async (classId, board) => {
+        const params = new URLSearchParams();
+        if (classId) params.append('classId', classId);
+        if (board) params.append('board', board);
+
+        const response = await fetch(`${API_URL}/notifications?${params}`);
+        return response.json();
+    }
+};
+
+export default { authAPI, contentAPI, pricingAPI, ordersAPI, reviewsAPI, notificationsAPI };
