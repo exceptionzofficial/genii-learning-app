@@ -68,24 +68,21 @@ export const contentAPI = {
         return response.json();
     },
 
-    getVideos: async (classId, board) => {
-        const params = new URLSearchParams({ type: 'video' });
-        if (classId) params.append('classId', classId);
-        if (board) params.append('board', board);
-
+    getContent: async (classId, board = 'state', type = null) => {
+        const params = new URLSearchParams({ classId, board });
+        if (type) params.append('type', type);
         const response = await fetch(`${API_URL}/content?${params}`);
+        return response.json();
+    },
+    getHardCopyContent: async () => {
+        const response = await fetch(`${API_URL}/content?classId=hardcopy`);
         return response.json();
     }
 };
 
 // Pricing API
 export const pricingAPI = {
-    getAll: async () => {
-        const response = await fetch(`${API_URL}/pricing`);
-        return response.json();
-    },
-
-    getByClass: async (classId) => {
+    getPricing: async (classId) => {
         const response = await fetch(`${API_URL}/pricing/${classId}`);
         return response.json();
     }
@@ -93,7 +90,8 @@ export const pricingAPI = {
 
 // Orders API
 export const ordersAPI = {
-    create: async (token, orderData) => {
+    createOrder: async (orderData) => {
+        const token = localStorage.getItem('token');
         const response = await fetch(`${API_URL}/orders`, {
             method: 'POST',
             headers: {
@@ -104,10 +102,12 @@ export const ordersAPI = {
         });
         return response.json();
     },
-
-    getMyOrders: async (token) => {
+    getMyOrders: async () => {
+        const token = localStorage.getItem('token');
         const response = await fetch(`${API_URL}/orders`, {
-            headers: { 'Authorization': `Bearer ${token}` }
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
         });
         return response.json();
     }

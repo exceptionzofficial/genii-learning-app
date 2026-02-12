@@ -11,7 +11,8 @@ import {
     User,
     LogOut,
     Home,
-    Bell
+    Bell,
+    ShoppingBag
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { CLASSES } from '../../data/mockData';
@@ -231,6 +232,16 @@ function Header() {
                             >
                                 <Download size={20} />
                                 <span>My Downloads</span>
+                            </NavLink>
+                            <NavLink
+                                to="/my-orders"
+                                className={({ isActive }) =>
+                                    `mobile-nav-link ${isActive ? 'mobile-nav-link-active' : ''}`
+                                }
+                                onClick={handleNavClick}
+                            >
+                                <ShoppingBag size={20} />
+                                <span>My Orders</span>
                             </NavLink>
                         </>
                     )}

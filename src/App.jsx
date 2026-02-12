@@ -19,6 +19,7 @@ import HardCopy from './pages/HardCopy/HardCopy';
 import MyDownloads from './pages/MyDownloads/MyDownloads';
 import Profile from './pages/Profile/Profile';
 import Notifications from './pages/Notifications/Notifications';
+import MyOrders from './pages/MyOrders/MyOrders';
 
 // Styles
 import './App.css';
@@ -145,6 +146,7 @@ function AppContent() {
           <Route path="/my-downloads" element={<MyDownloads />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/notifications" element={<Notifications />} />
+          <Route path="/my-orders" element={<MyOrders />} />
         </Routes>
       </main>
       <Footer />
