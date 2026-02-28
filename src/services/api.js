@@ -68,6 +68,15 @@ export const contentAPI = {
         return response.json();
     },
 
+    getVideos: async (classId, board) => {
+        const params = new URLSearchParams({ type: 'video' });
+        if (classId) params.append('classId', classId);
+        if (board) params.append('board', board);
+
+        const response = await fetch(`${API_URL}/content?${params}`);
+        return response.json();
+    },
+
     getContent: async (classId, board = 'state', type = null) => {
         const params = new URLSearchParams({ classId, board });
         if (type) params.append('type', type);
@@ -76,6 +85,14 @@ export const contentAPI = {
     },
     getHardCopyContent: async () => {
         const response = await fetch(`${API_URL}/content?classId=hardcopy`);
+        return response.json();
+    },
+    getMCQs: async (classId, board) => {
+        const params = new URLSearchParams({ type: 'mcq' });
+        if (classId) params.append('classId', classId);
+        if (board) params.append('board', board);
+
+        const response = await fetch(`${API_URL}/content?${params}`);
         return response.json();
     }
 };

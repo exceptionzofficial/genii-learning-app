@@ -20,6 +20,7 @@ import MyDownloads from './pages/MyDownloads/MyDownloads';
 import Profile from './pages/Profile/Profile';
 import Notifications from './pages/Notifications/Notifications';
 import MyOrders from './pages/MyOrders/MyOrders';
+import MCQ from './pages/MCQ/MCQ';
 
 // Styles
 import './App.css';
@@ -147,6 +148,7 @@ function AppContent() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/notifications" element={<Notifications />} />
           <Route path="/my-orders" element={<MyOrders />} />
+          <Route path="/mcqs" element={<MCQ />} />
         </Routes>
       </main>
       <Footer />

@@ -12,7 +12,8 @@ import {
     LogOut,
     Home,
     Bell,
-    ShoppingBag
+    ShoppingBag,
+    HelpCircle
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { CLASSES } from '../../data/mockData';
@@ -38,6 +39,7 @@ function Header() {
         { path: '/', label: 'Home', icon: Home },
         { path: '/materials', label: 'Materials', icon: FileText },
         { path: '/videos', label: 'Videos', icon: Video },
+        { path: '/mcqs', label: 'MCQs', icon: HelpCircle },
         { path: '/hard-copy', label: 'Hard Copy', icon: Truck },
         { path: '/notifications', label: 'Notifications', icon: Bell },
     ];
